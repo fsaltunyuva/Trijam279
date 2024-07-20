@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class TileController : MonoBehaviour
@@ -8,6 +7,7 @@ public class TileController : MonoBehaviour
     [SerializeField] public Material lightedMaterial;
     [SerializeField] public Material unlightedMaterial;
     [SerializeField] private int lightedTileChangeInterval = 3;
+    [SerializeField] private PlayerController playerController;
 
     public bool isGameOver = false;
     
@@ -21,10 +21,20 @@ public class TileController : MonoBehaviour
     {
         int randomTile1 = Random.Range(0, 25);
         int randomTile2 = Random.Range(0, 25);
-        tiles[randomTile1].GetComponent<Tile>().isSunlighted = true;
-        tiles[randomTile2].GetComponent<Tile>().isSunlighted = true;
+
+        if (!playerController.isGameStarted)
+        {
+            tiles[randomTile1].GetComponent<Tile>().isSunlighted = false;
+            tiles[randomTile2].GetComponent<Tile>().isSunlighted = false;
+        }
+        else
+        {
+            tiles[randomTile1].GetComponent<Tile>().isSunlighted = true;
+            tiles[randomTile2].GetComponent<Tile>().isSunlighted = true;
+        }
         
         yield return new WaitForSeconds(lightedTileChangeInterval);
+        
         
         tiles[randomTile1].GetComponent<Tile>().isSunlighted = false;
         tiles[randomTile2].GetComponent<Tile>().isSunlighted = false;

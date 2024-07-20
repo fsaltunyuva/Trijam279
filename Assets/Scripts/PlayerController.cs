@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using TMPro;
+using UnityEngine.Playables;
 using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
@@ -15,36 +16,43 @@ public class PlayerController : MonoBehaviour
 
     // Flag to ensure the position is changed only once
     private bool hasMoved = false;
+    public bool isGameStarted = false;
     
     [SerializeField] private TileController tilecontroller;
     [SerializeField] private GameObject gameOverPanel;
+    [SerializeField] private GameObject tutorialPanel;
     [SerializeField] private Animator sunflowerAnimator;
+    [SerializeField] private PlayableDirector timeline;
 
     // Update is called once per frame
     void Update()
     {
         scoreText.text = "Score: " + score;
-        
-        // Check if the key (e.g., spacebar) is pressed and the object hasn't been moved yet
-        if ((Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)) && !hasMoved)
+
+        if (isGameStarted)
         {
-            StartCoroutine(MoveAndReset("right"));
-        }
+            // Check if the key (e.g., spacebar) is pressed and the object hasn't been moved yet
+            if ((Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)) && !hasMoved)
+            {
+                StartCoroutine(MoveAndReset("right"));
+            }
         
-        if ((Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow)) && !hasMoved)
-        {
-            StartCoroutine(MoveAndReset("left"));
-        }
+            if ((Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow)) && !hasMoved)
+            {
+                StartCoroutine(MoveAndReset("left"));
+            }
         
-        if ((Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow)) && !hasMoved)
-        {
-            StartCoroutine(MoveAndReset("up"));
-        }
+            if ((Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow)) && !hasMoved)
+            {
+                StartCoroutine(MoveAndReset("up"));
+            }
         
-        if ((Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))&& !hasMoved)
-        {
-            StartCoroutine(MoveAndReset("down"));
+            if ((Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))&& !hasMoved)
+            {
+                StartCoroutine(MoveAndReset("down"));
+            }
         }
+
     }
     
     private IEnumerator MoveAndReset(string direction)
@@ -121,6 +129,7 @@ public class PlayerController : MonoBehaviour
     {
         tilecontroller.isGameOver = true;
         tilecontroller.MakeAllTilesUnlighted();
+        isGameStarted = false;
         Debug.Log("Game Over");
         scoreText.text = "";
         gameOverScoreText.text = $"You gained {score} Joule Energy!";
@@ -130,5 +139,12 @@ public class PlayerController : MonoBehaviour
     public void RestartGame()
     {
         SceneManager.LoadScene(0);
+    }
+
+    public void StartGame()
+    {
+        tutorialPanel.SetActive(false);
+        timeline.Play();
+        isGameStarted = true;
     }
 }
