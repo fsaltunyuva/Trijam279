@@ -1,7 +1,7 @@
-using System;
 using System.Collections;
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
@@ -10,10 +10,15 @@ public class PlayerController : MonoBehaviour
     private Vector3 movement;
     
     [SerializeField] private TextMeshProUGUI scoreText;
+    [SerializeField] private TextMeshProUGUI gameOverScoreText;
     private int score = 0;
 
     // Flag to ensure the position is changed only once
     private bool hasMoved = false;
+    
+    [SerializeField] private TileController tilecontroller;
+    [SerializeField] private GameObject gameOverPanel;
+    [SerializeField] private Animator sunflowerAnimator;
 
     // Update is called once per frame
     void Update()
@@ -103,7 +108,27 @@ public class PlayerController : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Tile") && other.gameObject.GetComponent<Tile>().isSunlighted)
         {
+            sunflowerAnimator.SetBool("lighted", true);
             score += 10;
         }
+        else
+        {
+            sunflowerAnimator.SetBool("lighted", false);
+        }
+    }
+
+    public void GameOver()
+    {
+        tilecontroller.isGameOver = true;
+        tilecontroller.MakeAllTilesUnlighted();
+        Debug.Log("Game Over");
+        scoreText.text = "";
+        gameOverScoreText.text = $"You gained {score} Joule Energy!";
+        gameOverPanel.SetActive(true);
+    }
+    
+    public void RestartGame()
+    {
+        SceneManager.LoadScene(0);
     }
 }
