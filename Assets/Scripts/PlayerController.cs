@@ -76,8 +76,9 @@ public class PlayerController : MonoBehaviour
                 break;
             
             case "up":
-                if (transform.position.z == 0f)
+                if (transform.position.z >= -0.1f )
                 {
+                    Debug.Log("I am at the top and my transform.position is " + transform.position);
                     yield break;
                 }
                 transform.position += new Vector3(0, 0, 1.25f);
@@ -104,6 +105,7 @@ public class PlayerController : MonoBehaviour
         hasMoved = false;
     }
 
+    /*
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("Tile"))
@@ -111,6 +113,7 @@ public class PlayerController : MonoBehaviour
             Debug.Log("I am on the tile" + other.gameObject.name);
         }
     }
+    */
 
     private void OnTriggerStay(Collider other)
     {
